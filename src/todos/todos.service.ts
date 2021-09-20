@@ -12,8 +12,7 @@ export class TodosService {
 
     async createTodo(todo: CreateTodo): Promise<Todo> {
         const newTodo = new this.todoModels(todo)
-        const saving = await newTodo.save()
-        return saving
+        return await newTodo.save()
     }
 
     async findTodos(task ?: string): Promise<Todo[]> {
@@ -53,8 +52,7 @@ export class TodosService {
     }
 
     async deleteTodo(id: string): Promise<Todo> {
-        let deletedTodos = await this.todoModels.findByIdAndDelete(id)
-        return deletedTodos
+        return await this.todoModels.findByIdAndDelete(id)
     }
 
     async deleteTodos(task: string): Promise<Todo[]> {
