@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { createTodo } from './dtos/create-todo.dto';
-import { updateTodo } from './dtos/update-todo.dto';
+import { CreateTodo } from './dtos/create-todo.dto';
+import { UpdateTodo } from './dtos/update-todo.dto';
 import { TodoDocument, Todo } from './schemas/todos.schema';
 
 @Injectable()
@@ -10,37 +10,51 @@ export class TodosService {
 
     constructor(@InjectModel(Todo.name) private readonly todoModels: Model<TodoDocument> ) {}
 
-    async createTodo(todo: createTodo): Promise<Todo> {
+    async createTodo(todo: CreateTodo): Promise<Todo> {
         const newTodo = new this.todoModels(todo)
-        return await newTodo.save()
+        const saving = await newTodo.save()
+        return saving
     }
 
     async findTodos(task ?: string): Promise<Todo[]> {
-        if( task ) return await this.todoModels.find({task})
-        return await this.todoModels.find({})
+        let findedTask : any
+        if( task ) {
+            findedTask = await this.todoModels.find({task})
+            return findedTask
+        }
+        findedTask = await this.todoModels.find({})
+        return findedTask
     }
 
     async findById(id: string): Promise<Todo> {
-        return await this.todoModels.findById({ _id: id })
+        let findedTask: any
+        findedTask = await this.todoModels.findById({ _id: id })
+        return findedTask
     }
 
-    async updateTodo(id: string, body: updateTodo): Promise<Todo> {
+    async updateTodo(id: string, body: UpdateTodo): Promise<Todo> {
+        let updatedTask: any
         let checkTodo = await this.todoModels.findOne({ _id: id })
-        if( checkTodo ) return await this.todoModels.findByIdAndUpdate(id, body)
+        if( checkTodo ) {
+            updatedTask = await this.todoModels.findByIdAndUpdate(id, body)
+            return updatedTask
+        }
         const newTodo = new this.todoModels(body)
-        return await newTodo.save()
+        updatedTask = await newTodo.save()
+        return updatedTask
     }
 
-    async updateTodos(task: string, body: updateTodo): Promise<Todo[]> {
+    async updateTodos(task: string, body: UpdateTodo): Promise<Todo[]> {
+        let updatedTodos: any
         let checkTodos = await this.todoModels.find({ task })
-        if( checkTodos ) await this.todoModels.updateMany({task}, body) 
-        return await this.todoModels.find({ task })
-
-        // return await this.todoModels.updateMany({task}, body) 
+        if( checkTodos ) await this.todoModels.updateMany({task}, body)
+        updatedTodos = await this.todoModels.find({ task })
+        return updatedTodos
     }
 
     async deleteTodo(id: string): Promise<Todo> {
-        return await this.todoModels.findByIdAndDelete(id)
+        let deletedTodos = await this.todoModels.findByIdAndDelete(id)
+        return deletedTodos
     }
 
     async deleteTodos(task: string): Promise<Todo[]> {

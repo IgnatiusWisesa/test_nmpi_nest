@@ -1,7 +1,7 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiBadRequestResponse } from '@nestjs/swagger';
-import { createTodo } from './dtos/create-todo.dto';
-import { updateTodo } from './dtos/update-todo.dto';
+import { CreateTodo } from './dtos/create-todo.dto';
+import { UpdateTodo } from './dtos/update-todo.dto';
 import { Todo } from './schemas/todos.schema';
 import { TodosService } from './todos.service';
 
@@ -31,13 +31,13 @@ export class TodosController {
     @ApiBadRequestResponse()
     @ApiCreatedResponse({ type: Todo })
     @Post()
-    addTodo(@Body() body : createTodo): Promise<Todo> {
+    addTodo(@Body() body : CreateTodo): Promise<Todo> {
         return this.todosService.createTodo(body)
     }
 
     @ApiBadRequestResponse()
     @Put(':id')
-    updateTodo(@Param('id') id:string, @Body() body: updateTodo ): Promise<Todo> {
+    updateTodo(@Param('id') id:string, @Body() body: UpdateTodo ): Promise<Todo> {
         if( !id.match(/^[0-9a-fA-F]{24}$/) ) throw new BadRequestException()
         if( typeof id != 'string' ) throw new BadRequestException()
         return this.todosService.updateTodo(id, body)
@@ -45,7 +45,7 @@ export class TodosController {
 
     @ApiBadRequestResponse()
     @Put()
-    updateTodos(@Query('task') task:string, @Body() body: updateTodo ): Promise<Todo[]> {
+    updateTodos(@Query('task') task:string, @Body() body: UpdateTodo ): Promise<Todo[]> {
         return this.todosService.updateTodos(task, body)
     }
 

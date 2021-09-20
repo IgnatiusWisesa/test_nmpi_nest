@@ -1,10 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { TodosModule } from '../src/todos/todos.module'
-import { Todo } from '../src/todos/schemas/todos.schema';
-import { getModelToken } from '@nestjs/mongoose';
-import { MockTodo, todo, todos, TodosControllerMock } from '../test/e2e.mock/todos.mock';
 
 describe('TodosController (e2e)', () => {
   let app = `http://localhost:3001`;
